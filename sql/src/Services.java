@@ -279,11 +279,14 @@ public class Services {
                     "jdbc:postgresql://pgserver.mau.se:5432/ao7408", "ao7408", "8ixdmx0u");
             String query = "{ ? = call list_total_price(?)}";
             CallableStatement callableStatement = con.prepareCall(query);
+
             callableStatement.registerOutParameter(1, Types.INTEGER);
+
             callableStatement.setInt(2, customer_id);
             callableStatement.execute();
 
             int price = callableStatement.getInt(1);
+
             System.out.println("Det totala priset är: " + price + " kr");
             System.out.println("Klicka 1 för att betala: ");
             int choice = scanner.nextInt();
@@ -298,6 +301,9 @@ public class Services {
             e.printStackTrace();
         }
     }
+
+
+
 
 
 
@@ -430,7 +436,7 @@ public class Services {
             callableStatement.close();
             con.close();
         }
-        }
+    }
 
     public void changeDiscountPerCentage(int discount_id, double discount_percentage) throws Exception {
         Connection con = DriverManager.getConnection(
@@ -718,25 +724,25 @@ public class Services {
     }
 
     public void view_of_orders(int customer_id) throws Exception {
-    String query = "SELECT * FROM view_of_orders(?)";
-    try (Connection con = DriverManager.getConnection(
-            "jdbc:postgresql://pgserver.mau.se:5432/ao7408", "ao7408", "8ixdmx0u");
-         PreparedStatement stmt = con.prepareStatement(query)) {
-        stmt.setInt(1, customer_id);
+        String query = "SELECT * FROM view_of_orders(?)";
+        try (Connection con = DriverManager.getConnection(
+                "jdbc:postgresql://pgserver.mau.se:5432/ao7408", "ao7408", "8ixdmx0u");
+             PreparedStatement stmt = con.prepareStatement(query)) {
+            stmt.setInt(1, customer_id);
 
-        try (ResultSet rs = stmt.executeQuery()) {
-            while ((rs.next())) {
-                int order_id = rs.getInt("order_idd");
-                int quantity_ordered = rs.getInt("quantity_orderedd");
-                int pCode = rs.getInt("product_codee");
-                String pName = rs.getString("product_namee");
-                Date date = rs.getDate("datee");
+            try (ResultSet rs = stmt.executeQuery()) {
+                while ((rs.next())) {
+                    int order_id = rs.getInt("order_idd");
+                    int quantity_ordered = rs.getInt("quantity_orderedd");
+                    int pCode = rs.getInt("product_codee");
+                    String pName = rs.getString("product_namee");
+                    Date date = rs.getDate("datee");
 
-                System.out.println("Order ID: " + order_id + " | Quantity ordered: " + quantity_ordered + " | Product code: " + pCode + " | Product name: " + pName + " | Date: " + date);
+                    System.out.println("Order ID: " + order_id + " | Quantity ordered: " + quantity_ordered + " | Product code: " + pCode + " | Product name: " + pName + " | Date: " + date);
+                }
             }
         }
     }
-}
 
     public void created_new_order(int customer_id) {
         Scanner scanner = new Scanner(System.in);
@@ -759,6 +765,5 @@ public class Services {
         }
     }
 }
-
 
 
